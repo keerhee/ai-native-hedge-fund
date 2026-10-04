@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Native 헤지펀드</title>
+<meta name="description" content="한국 주식 PIT 데이터베이스와 LLM 멀티에이전트 헤지펀드 사례 분석과 Claude Code 구현 제안">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6F7F9;--panel:#FFFFFF;--ink:#14213D;--sub:#5B6475;--line:#E2E6EC;--accent:#1F4E8C;--accent-ink:#FFFFFF;--chip:#EEF2F8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E131B;--panel:#161D28;--ink:#E8EDF5;--sub:#9AA6B8;--line:#26303F;--accent:#6EA1E6;--accent-ink:#0E131B;--chip:#1E2836}}
+:root[data-theme="dark"]{--bg:#0E131B;--panel:#161D28;--ink:#E8EDF5;--sub:#9AA6B8;--line:#26303F;--accent:#6EA1E6;--accent-ink:#0E131B;--chip:#1E2836}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+header{padding:44px 0 20px}
+.kick{font-size:13px;letter-spacing:.06em;color:var(--sub);font-weight:500}
+h1{font-size:clamp(26px,4.4vw,38px);margin:6px 0 8px;line-height:1.25}
+.intro{color:var(--sub);max-width:760px;margin:0}
+.stats{display:flex;gap:28px;flex-wrap:wrap;margin:22px 0 4px}
+.stats b{display:block;font-size:26px;color:var(--accent)}.stats span{font-size:13px;color:var(--sub)}
+.note{margin:18px 0 0;padding:12px 14px;border-left:3px solid var(--accent);background:var(--chip);border-radius:6px;font-size:14px}
+nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:6px;overflow-x:auto;padding:10px 16px}
+nav a{flex:none;text-decoration:none;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:14px;font-weight:500}
+nav a:hover{border-color:var(--accent);color:var(--accent)}
+main .wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;padding:22px 16px 48px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;scroll-margin-top:64px;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:10px}
+.top h2{font-size:19px;margin:0}
+.badge{flex:none;min-width:34px;height:34px;border-radius:8px;display:grid;place-items:center;font-weight:700;background:var(--accent);color:var(--accent-ink);font-size:15px;padding:0 6px}
+.badge.bX{font-size:13px}
+.lead{color:var(--sub);font-size:14px;margin:8px 0 10px}
+dl{margin:0 0 12px;display:grid;gap:4px}dl div{display:flex;gap:8px;font-size:14px}dt{flex:none;width:82px;color:var(--sub)}dd{margin:0}
+.files{list-style:none;margin:auto 0 0;padding:0;border-top:1px solid var(--line)}
+.files li{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:10px 0 0}
+.k{font-weight:500;font-size:14px}.m{color:var(--sub);font-size:13px}.a{margin-left:auto;display:flex;gap:6px}
+.btn{text-decoration:none;font-size:13px;padding:4px 10px;border-radius:6px;background:var(--accent);color:var(--accent-ink);font-weight:500}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+footer{border-top:1px solid var(--line);color:var(--sub);font-size:13px;padding:18px 0 36px}
+footer a{color:var(--accent)}
+main .wrap{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:760px){main .wrap{grid-template-columns:1fr}}
+</style></head><body>
+<header><div class="wrap">
+<div class="kick">AI NATIVE HEDGE FUND</div>
+<h1>AI Native 헤지펀드</h1>
+<p class="intro">국내 퀀트 실무자가 공개한 한국 주식 PIT(point-in-time) 데이터베이스와 LLM 멀티에이전트 헤지펀드 사례를 분석하고, 실전 운용에 필요한 보강점과 Claude Code로 구현하는 방안을 정리한 자료. 경쟁력은 AI가 아니라 데이터에서 나온다.</p>
+<div class="stats"><div><b>1</b><span>원고</span></div><div><b>3</b><span>덱</span></div><div><b>4</b><span>PDF</span></div><div><b>83</b><span>쪽·장</span></div></div>
+<p class="note">읽는 순서 — 원고나 사례 분석 덱으로 전체를 본 뒤, 구현 제안 두 편(데이터베이스 → 운용 시스템)으로 넘어간다. 성과 수치는 원문 공개 자료 기준이며 투자 권고가 아니다.</p>
+</div></header>
+<nav aria-label="자료"><div class="wrap"><a href="#doc">원고</a><a href="#case">사례 분석</a><a href="#db">PIT DB 구현</a><a href="#fund">헤지펀드 구현</a></div></nav>
+<main><div class="wrap">
+<article class="card" id="doc">
+  <div class="top"><span class="badge bX">원고</span><h2>한국 주식 PIT 데이터베이스와 LLM 멀티에이전트 헤지펀드</h2></div>
+  <p class="lead">경쟁력은 AI가 아니라 PIT 데이터에 있다 — 실전 운용에 필요한 세 축의 보강</p>
+  <dl><div><dt>구성</dt><dd>PIT DB · 에이전트 조직 · 검증과 규제 · 설계 제안</dd></div><div><dt>성격</dt><dd>읽는 문서 · 참고문헌 포함</dd></div></dl>
+  <ul class="files"><li><span class="k">사례 분석 원고</span><span class="m">14쪽 · 791 KB</span><span class="a"><a class="btn" href="https://github.com/keerhee/ai-native-hedge-fund/blob/main/%ED%95%9C%EA%B5%AD%20%EC%A3%BC%EC%8B%9D%20PIT%20%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4%EC%99%80%20LLM%20%EB%A9%80%ED%8B%B0%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8%20%ED%97%A4%EC%A7%80%ED%8E%80%EB%93%9C.pdf" target="_blank" rel="noopener">열람</a><a class="btn ghost" href="https://github.com/keerhee/ai-native-hedge-fund/raw/main/%ED%95%9C%EA%B5%AD%20%EC%A3%BC%EC%8B%9D%20PIT%20%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4%EC%99%80%20LLM%20%EB%A9%80%ED%8B%B0%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8%20%ED%97%A4%EC%A7%80%ED%8E%80%EB%93%9C.pdf" download>내려받기</a></span></li></ul>
+</article><article class="card" id="case">
+  <div class="top"><span class="badge">1</span><h2>한국 주식 PIT DB와 AI 헤지펀드</h2></div>
+  <p class="lead">네 개의 질문으로 사례를 해부한다 — 데이터의 시점이 맞아야 에이전트의 판단도 의미가 있다</p>
+  <dl><div><dt>네 질문</dt><dd>한국 PIT DB · AI 헤지펀드 · 검증과 규제 · 설계와 적용</dd></div><div><dt>보강할 축</dt><dd>성과 구간 분리 · LLM 사전학습 누수 · 투자자문 규제</dd></div></dl>
+  <ul class="files"><li><span class="k">사례 분석 덱</span><span class="m">26장 · 999 KB</span><span class="a"><a class="btn" href="https://github.com/keerhee/ai-native-hedge-fund/blob/main/PIT_DB_AI_HedgeFund_zeroone.pdf" target="_blank" rel="noopener">열람</a><a class="btn ghost" href="https://github.com/keerhee/ai-native-hedge-fund/raw/main/PIT_DB_AI_HedgeFund_zeroone.pdf" download>내려받기</a></span></li></ul>
+</article><article class="card" id="db">
+  <div class="top"><span class="badge">2</span><h2>Claude Code로 구축하는 한국 주식 PIT DB</h2></div>
+  <p class="lead">정정공시까지 시점별로 보존하는 데이터 계층 — 에이전트는 코드를 쓰고, 데이터 규칙은 hook이 지킨다</p>
+  <dl><div><dt>네 단계</dt><dd>목표와 설계 · Claude Code 구성 · 수집과 파싱 · 검증과 운영</dd></div><div><dt>다루는 것</dt><dd>스키마 · 서브에이전트 · 정정 감지 · 회귀 테스트 · cron</dd></div></dl>
+  <ul class="files"><li><span class="k">구현 제안 ① 데이터베이스 편</span><span class="m">21장 · 757 KB</span><span class="a"><a class="btn" href="https://github.com/keerhee/ai-native-hedge-fund/blob/main/KRX_PIT_DB_ClaudeCode_zeroone.pdf" target="_blank" rel="noopener">열람</a><a class="btn ghost" href="https://github.com/keerhee/ai-native-hedge-fund/raw/main/KRX_PIT_DB_ClaudeCode_zeroone.pdf" download>내려받기</a></span></li></ul>
+</article><article class="card" id="fund">
+  <div class="top"><span class="badge">3</span><h2>Claude Code로 구현하는 AI 헤지펀드</h2></div>
+  <p class="lead">에이전트는 연구하고, 코드는 심사하고, 사람은 승인한다 — LLM의 판단은 코드가 정한 게이트를 통과할 때만 돈이 된다</p>
+  <dl><div><dt>네 단계</dt><dd>설계 원칙 · 저장소와 에이전트 · 연구와 심사 · 매크로 운영</dd></div><div><dt>다루는 것</dt><dd>5계층 권한 분리 · 13개 역할 · 사전등록 · DSR 게이트 · 결정 로그</dd></div></dl>
+  <ul class="files"><li><span class="k">구현 제안 ② 운용 시스템 편</span><span class="m">22장 · 816 KB</span><span class="a"><a class="btn" href="https://github.com/keerhee/ai-native-hedge-fund/blob/main/AI_HedgeFund_ClaudeCode_zeroone.pdf" target="_blank" rel="noopener">열람</a><a class="btn ghost" href="https://github.com/keerhee/ai-native-hedge-fund/raw/main/AI_HedgeFund_ClaudeCode_zeroone.pdf" download>내려받기</a></span></li></ul>
+</article>
+</div></main>
+<footer><div class="wrap">저장소 <a href="https://github.com/keerhee/ai-native-hedge-fund">keerhee/ai-native-hedge-fund</a></div></footer>
+</body></html>
