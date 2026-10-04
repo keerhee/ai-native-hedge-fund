@@ -8,7 +8,7 @@
 
 | 파일 | 내용 | 분량 |
 |---|---|---|
-| [한국 주식 PIT 데이터베이스와 LLM 멀티에이전트 헤지펀드.pdf](한국%20주식%20PIT%20데이터베이스와%20LLM%20멀티에이전트%20헤지펀드.pdf) | 사례 분석 원고 — PIT DB · 에이전트 조직 · 검증과 규제 · 설계 제안 | 14쪽 |
+| [한국 주식 PIT 데이터베이스와 LLM 멀티에이전트 헤지펀드.pdf](한국%20주식%20PIT%20데이터베이스와%20LLM%20멀티에이전트%20헤지펀드.pdf) | 사례 분석 원고 — PIT DB · 에이전트 조직 · 검증과 규제 · 설계 제안 | 12쪽 |
 | [PIT_DB_AI_HedgeFund_zeroone.pdf](PIT_DB_AI_HedgeFund_zeroone.pdf) | 사례 분석과 실무 보강 — 네 개의 질문으로 사례를 해부 | 26장 |
 | [KRX_PIT_DB_ClaudeCode_zeroone.pdf](KRX_PIT_DB_ClaudeCode_zeroone.pdf) | 구현 제안 ① 데이터베이스 편 — 정정공시까지 시점별로 보존하는 데이터 계층 | 21장 |
 | [AI_HedgeFund_ClaudeCode_zeroone.pdf](AI_HedgeFund_ClaudeCode_zeroone.pdf) | 구현 제안 ② 운용 시스템 편 — 에이전트는 연구하고, 코드는 심사하고, 사람은 승인한다 | 22장 |
